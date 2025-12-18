@@ -1,0 +1,32 @@
+.homePage{
+    display: flex;
+
+}
+.homePage .textContainer{
+    flex: 3;
+}
+.homePage .textContainer .wrapper{
+    padding-right: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 50px;
+    height: 100%;
+
+}
+.homePage .textContainer .title{
+    font-size: 40px;
+}
+.homePage .imgcontainer{
+    flex: 2;
+}
+@media (max-width:1024px){
+    .imgcontainer{
+        display: none;
+    }
+}
+@media (max-width:768px){
+    .imgcontainer{
+        display: none;
+    }
+}
