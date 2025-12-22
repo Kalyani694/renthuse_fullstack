@@ -1,35 +1,56 @@
-import React from 'react'
-import "./navbar.css"
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import React, { useContext } from "react";
+import "./navbar.css";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
+
 const Navbar = () => {
+  const { currentUser} = useContext(AuthContext);
+
   return (
     <nav>
       <div className="left">
-        <a href="/">
-          <img src="/assets/logo.png" alt="" className='logo' />
-          <span className='logoText'>RENTHOUSE</span>
-        </a>
-
+        <Link to="/">
+          <img src="/assets/logo.png" alt="logo" className="logo" />
+          <span className="logoText">RENTHOUSE</span>
+        </Link>
       </div>
-      <div className="right">
-        <a href="/login">
-          <FavoriteBorderIcon />
-          </a>
 
+      <div className="right">
+        {/* ❤️ Favorite */}
+        <Link to="/favorites">
+          <FavoriteBorderIcon />
+        </Link>
+
+        {/* ➕ Post Property */}
         <div className="topbarIcons">
-          <a href='/newPost' className="topbarIconItem">
+          <Link to="/add" className="topbarIconItem">
             Post Property
             <span className="topbarIconBadge">free</span>
-          </a>
+          </Link>
         </div>
 
-        <a href="/profile">
-          <img src="/assets/avatar.png" alt="" className='profileImg' />
-        </a>
-
+        {/* 🔐 Auth Section */}
+        {!currentUser ? (
+          <>
+            <Link to="/login" className="authBtn">Login</Link>
+            <Link to="/register" className="authBtn">Register</Link>
+          </>
+        ) : (
+          <div className="userInfo">
+            <Link to="/profile">
+              <img
+                src={currentUser.avatar || "/assets/avatar.png"}
+                alt="avatar"
+                className="profileImg"
+              />
+            </Link>
+          
+          </div>
+        )}
       </div>
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

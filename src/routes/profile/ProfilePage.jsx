@@ -1,53 +1,90 @@
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import "./profilePage.css";
-//import apiRequest from "../../lib/apiRequest";
-import { Link} from "react-router-dom";
-//import { Suspense, useContext } from "react";
-//import { AuthContext } from "../../context/AuthContext";
-//import NewPost from "../newPostPage/NewPost";
-import { userData } from "../../lib/dummyData";
+import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
+import { Suspense, useContext } from "react";
+import { AuthContext } from "../../context/AuthContext";
+import apiRequest from "../../lib/apiRequest";
 
 function ProfilePage() {
- 
+  const data = useLoaderData();
+  const { updateUser, currentUser } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await apiRequest.post("/auth/logout");
+      updateUser(null);
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  if (!currentUser) return null; // safety
+
   return (
     <div className="profilePage">
       <div className="details">
         <div className="wrapper">
+
           <div className="title">
             <h1>User Information</h1>
             <Link to="/profile/update">
               <button>Update Profile</button>
             </Link>
           </div>
+
           <div className="info">
             <span>
               Avatar:
-              <img src={userData.img || "noavatar.jpg"} alt="" />
+              <img src={currentUser.avatar || "/assets/avatar.png"} alt="" />
             </span>
             <span>
-              Username: <b>{userData.name}</b>
+              Username: <b>{currentUser.username}</b>
             </span>
             <span>
-              E-mail: <b>{userData.email}</b>
+              E-mail: <b>{currentUser.email}</b>
             </span>
-            <button >Logout</button>
+            <button onClick={handleLogout}>Logout</button>
           </div>
+
           <div className="title">
             <h1>My List</h1>
-            <Link to="/newPost">
+            <Link to="/add">
               <button>Create New Post</button>
             </Link>
           </div>
+
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await
+              resolve={data.postResponse}
+              errorElement={<p>Error loading posts!</p>}
+            >
+              {(postResponse) => (
+                <List posts={postResponse.data.userPosts} />
+              )}
+            </Await>
+          </Suspense>
+
           <div className="title">
             <h1>Saved List</h1>
           </div>
-          <List/>
+
+          <Suspense fallback={<p>Loading...</p>}>
+            <Await resolve={data.postResponse}>
+              {(postResponse) => (
+                <List posts={postResponse.data.savedPosts} />
+              )}
+            </Await>
+          </Suspense>
+
         </div>
       </div>
+
       <div className="chatContainer">
         <div className="wrapper">
-         <Chat/>
+          <Chat />
         </div>
       </div>
     </div>

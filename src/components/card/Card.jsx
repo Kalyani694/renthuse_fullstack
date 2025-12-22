@@ -1,34 +1,59 @@
 import { Link } from "react-router-dom";
-import BedIcon from '@mui/icons-material/Bed';
-import BathtubIcon from '@mui/icons-material/Bathtub';
-import ChatIcon from '@mui/icons-material/Chat';
+import BedIcon from "@mui/icons-material/Bed";
+import BathtubIcon from "@mui/icons-material/Bathtub";
+import ChatIcon from "@mui/icons-material/Chat";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import apiRequest from "../../lib/apiRequest";
 import "./card.css";
 
 function Card({ item }) {
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSave = () => {
-    setSaved(!saved);
+  /* =========================
+     CHECK IF ALREADY FAVORITE
+  ========================== */
+  useEffect(() => {
+    const checkFavorite = async () => {
+      try {
+        const res = await apiRequest.get("/favorites");
+        const isFav = res.data.some((post) => post.id === item.id);
+        setSaved(isFav);
+      } catch (err) {
+        console.error(err);
+      }
+    };
 
-    let savedItems = JSON.parse(localStorage.getItem("saved")) || [];
+    checkFavorite();
+  }, [item.id]);
 
-    if (!saved) {
-      savedItems.push(item);
-    } else {
-      savedItems = savedItems.filter(i => i.id !== item.id);
+  /* =========================
+     TOGGLE FAVORITE
+  ========================== */
+  const handleSave = async () => {
+    if (loading) return;
+
+    setLoading(true);
+    try {
+      await apiRequest.post("/favorites", {
+        postId: item.id,
+      });
+      setSaved((prev) => !prev);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-
-    localStorage.setItem("saved", JSON.stringify(savedItems));
   };
 
   return (
     <div className="card">
       <Link to={`/${item.id}`} className="imageContainer">
-        <img src={item.images[0]} alt="" />
+        <img src={item.images?.[0]} alt={item.title} />
       </Link>
+
       <div className="textContainer">
         <h2 className="title">
           <Link to={`/${item.id}`}>{item.title}</Link>
@@ -39,7 +64,7 @@ function Card({ item }) {
           <span>{item.address}</span>
         </p>
 
-        <p className="price">$ {item.price}</p>
+        <p className="price">₹ {item.price}</p>
 
         <div className="bottom">
           <div className="features">
@@ -55,8 +80,13 @@ function Card({ item }) {
           </div>
 
           <div className="icons">
-            <div className="icon" onClick={handleSave} style={{ cursor: "pointer" }}>
-              {saved ? <FavoriteIcon style={{ color: "red" }} /> : <FavoriteBorderIcon />}
+            {/* ❤️ FAVORITE ICON */}
+            <div className="icon" onClick={handleSave}>
+              {saved ? (
+                <FavoriteIcon style={{ color: "red" }} />
+              ) : (
+                <FavoriteBorderIcon />
+              )}
             </div>
 
             <div className="icon">

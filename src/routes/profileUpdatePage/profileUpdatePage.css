@@ -1,0 +1,115 @@
+.profileUpdatePage {
+  min-height: calc(100vh - 80px);
+  display: flex;
+  gap: 40px;
+  padding: 40px;
+  background-color: #f5f7fa;
+}
+
+/* =====================
+   FORM CONTAINER
+===================== */
+.formContainer {
+  flex: 2;
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.formContainer h1 {
+  margin-bottom: 25px;
+  font-size: 26px;
+  color: #333;
+}
+
+.formContainer form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.formContainer .item {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formContainer label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #555;
+}
+
+.formContainer input {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  outline: none;
+  transition: border 0.2s ease;
+}
+
+.formContainer input:focus {
+  border-color: #4a90e2;
+}
+
+.formContainer button {
+  margin-top: 10px;
+  padding: 12px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.formContainer button:hover {
+  background-color: #357bd8;
+}
+
+.formContainer span {
+  color: #e63946;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+/* =====================
+   SIDE CONTAINER
+===================== */
+.sideContainer {
+  flex: 1;
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.sideContainer .avatar {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 4px solid #4a90e2;
+}
+
+/* UploadWidget usually injects its own button */
+.sideContainer button {
+  width: 100%;
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media (max-width: 900px) {
+  .profileUpdatePage {
+    flex-direction: column;
+  }
+}
